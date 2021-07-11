@@ -141,14 +141,11 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    cls_temp = cls
-                    if cls_temp == 7 or cls_temp == 2:
-                        cls_temp = 0
-                    elif cls_temp == 0:
-                        cls_temp = 1
-                    elif cls_temp == 1:
-                        cls_temp = 2
-
+                    dict_id = {2: 0,
+                               7: 0,
+                               0: 1,
+                               1: 2}
+                    cls_temp = dict_id(cls)
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls_temp, *xywh, conf) if save_conf else (cls_temp, *xywh)  # label format
