@@ -71,7 +71,10 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
     names[0] = 'vehicle'
     names[1] = 'pedestrian'
     names[2] = 'cyclist'
-
+    dict_id = {2: 0,
+               7: 0,
+               0: 1,
+               1: 2}
     if half:
         model.half()  # to FP16
 
@@ -141,10 +144,6 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    dict_id = {2: 0,
-                               7: 0,
-                               0: 1,
-                               1: 2}
                     cls_temp = dict_id(cls)
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
