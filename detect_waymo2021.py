@@ -68,9 +68,9 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check image size
     names = model.module.names if hasattr(model, 'module') else model.names  # get class names
-    names[0] = 'pedestrian'
-    names[1] = 'cyclist'
-    names[2] = 'vehicle'
+    names[0] = 'vehicle'
+    names[1] = 'pedestrian'
+    names[2] = 'cyclist'
 
     if half:
         model.half()  # to FP16
@@ -142,8 +142,13 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     cls_temp = cls
-                    if cls_temp == 7:
+                    if cls_temp == 7 or cls_temp == 2:
+                        cls_temp = 0
+                    elif cls_temp == 0:
+                        cls_temp = 1
+                    elif cls_temp == 1:
                         cls_temp = 2
+
                     if cls_temp in [0, 1, 2]:
                         if save_txt:  # Write to file
                             xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
